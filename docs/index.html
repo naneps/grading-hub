@@ -1,0 +1,3441 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading Hub - Developer Docs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Marked for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism for syntax highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" id="prism-css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <style>
+        :root[data-theme="dark"] {
+            --bg-app: #090d16;
+            --bg-sidebar: #0f172a;
+            --bg-content: #0d1322;
+            --bg-card: #151f32;
+            --bg-card-hover: #1e2c45;
+            --bg-active: #1e293b;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-color-focus: rgba(245, 158, 11, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --accent-glow: rgba(245, 158, 11, 0.15);
+            --code-bg: #1e293b;
+            --shadow: 0 4px 20px -2px rgba(0,0,0,0.5);
+            --prism-theme-url: "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css";
+        }
+
+        :root[data-theme="light"] {
+            --bg-app: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-content: #ffffff;
+            --bg-card: #f1f5f9;
+            --bg-card-hover: #e2e8f0;
+            --bg-active: #f1f5f9;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-color-focus: rgba(245, 158, 11, 0.6);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --accent-glow: rgba(217, 119, 6, 0.1);
+            --code-bg: #f8fafc;
+            --shadow: 0 4px 20px -2px rgba(0,0,0,0.08);
+            --prism-theme-url: "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-coy.min.css";
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #ef4444);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .brand-info h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .brand-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .search-container {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13.5px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 36px;
+            top: 28px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .doc-list {
+            list-style: none;
+            padding: 16px 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .doc-item {
+            margin-bottom: 4px;
+        }
+
+        .doc-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .doc-link:hover {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .doc-link.active {
+            background-color: var(--bg-active);
+            color: var(--text-primary);
+            box-shadow: inset 3px 0 0 0 var(--accent);
+        }
+
+        .doc-icon {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .doc-link.active .doc-icon {
+            color: var(--accent);
+            opacity: 1;
+        }
+
+        .doc-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .doc-title {
+            font-size: 13.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doc-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background-color: var(--bg-card);
+        }
+
+        /* Content Area styling */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: 100%;
+            background-color: var(--bg-content);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent), #ef4444);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.1s ease;
+        }
+
+        .main-header {
+            height: 64px;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-content);
+            z-index: 5;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-title-container h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+
+        .header-title-container p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+
+        .header-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background-color: var(--bg-card-hover);
+        }
+
+        .header-btn.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .content-body {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            scroll-behavior: smooth;
+        }
+
+        .markdown-wrapper {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        /* Markdown elements formatting (GitHub-like Premium style) */
+        .markdown-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .markdown-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .markdown-content h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .markdown-content p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 14.5px;
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+            color: var(--text-secondary);
+        }
+
+        .markdown-content li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .markdown-content code {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--accent);
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-content pre {
+            background-color: var(--code-bg) !important;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 13px;
+            color: inherit;
+            border: none;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            margin-top: 16px;
+            font-size: 13.5px;
+        }
+
+        .markdown-content th {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .markdown-content td {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .markdown-content tr:nth-child(even) td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .markdown-content hr {
+            height: 1px;
+            background-color: var(--border-color);
+            border: none;
+            margin: 32px 0;
+        }
+
+        /* Custom Alert styling */
+        .alert-box {
+            border-left: 4px solid;
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-note {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.08);
+            color: var(--text-primary);
+        }
+
+        .alert-tip {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.08);
+            color: var(--text-primary);
+        }
+
+        .alert-important {
+            border-color: #8b5cf6;
+            background-color: rgba(139, 92, 246, 0.08);
+            color: var(--text-primary);
+        }
+
+        .alert-warning {
+            border-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.08);
+            color: var(--text-primary);
+        }
+
+        .alert-caution {
+            border-color: #f43f5e;
+            background-color: rgba(244, 63, 94, 0.08);
+            color: var(--text-primary);
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Dashboard Overview Home Styling */
+        .dashboard {
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .dashboard-hero {
+            background: linear-gradient(135deg, var(--bg-card), rgba(245, 158, 11, 0.05));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .dashboard-hero h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .dashboard-hero p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 600px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .dashboard-section-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .grid-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .grid-card:hover {
+            border-color: var(--accent);
+            background-color: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+        }
+
+        .card-badge.business { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .card-badge.product { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .card-badge.tech { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .card-badge.process { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-desc {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Timeline roadmap style */
+        .timeline-roadmap {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-card);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            width: 20%;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .step-node {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .timeline-step:hover .step-node {
+            border-color: var(--accent);
+            background-color: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .step-label {
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+
+        .step-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            max-width: 120px;
+        }
+
+        /* Search Results Panel */
+        .search-results-panel {
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .search-result-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .search-result-item:hover {
+            border-color: var(--accent);
+            background-color: var(--bg-card-hover);
+        }
+
+        .search-result-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .search-result-snippet {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .search-result-match {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--text-primary);
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Raw Viewer mode */
+        .raw-viewer {
+            width: 100%;
+            height: calc(100vh - 150px);
+            background-color: var(--code-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            outline: none;
+        }
+
+        /* Utility classes */
+        .text-accent { color: var(--accent) !important; }
+        .hidden { display: none !important; }
+
+        /* Print styles */
+        @media print {
+            .sidebar { display: none; }
+            .main-header { display: none; }
+            .content-body { padding: 0; overflow: visible; }
+            .markdown-wrapper { max-width: 100%; }
+            body { overflow: visible; height: auto; background-color: white; color: black; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">GH</div>
+            <div class="brand-info">
+                <h1>Grading Hub</h1>
+                <p>Developer Hub</p>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search documentation...">
+        </div>
+
+        <ul class="doc-list" id="docList">
+            <!-- Sidebar Items Dynamic -->
+        </ul>
+
+        <div class="sidebar-footer">
+            <button id="themeToggle" class="theme-toggle-btn" title="Toggle Theme">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" id="theme-icon">
+                    <!-- Sun icon -->
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;">v1.0.0</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Reading Progress -->
+        <div id="readingProgress" class="progress-bar"></div>
+
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <div class="header-title-container">
+                    <h2 id="headerTitle">Documentation Overview</h2>
+                    <p id="headerMeta">Select a document to begin reading</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="viewToggle" class="header-btn hidden">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 19h16M4 15h16M4 11h16M4 7h16"></path></svg>
+                    <span>View Raw</span>
+                </button>
+                <button id="copyBtn" class="header-btn hidden">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Copy Content</span>
+                </button>
+                <button id="printBtn" class="header-btn">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    <span>Print</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-body" id="contentBody">
+            <div class="markdown-wrapper">
+                
+                <!-- Dashboard Home Screen -->
+                <div id="dashboardView" class="dashboard">
+                    <div class="dashboard-hero">
+                        <h2>Grading Hub</h2>
+                        <p>Dokumentasi teknis, arsitektur sistem, dan manajemen project untuk platform e-commerce Lightroom Presets. Dibuat agar developer dapat memahami, mengembangkan, dan memelihara sistem dengan cepat.</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">Project Start</span>
+                            <span class="stat-value">May 20, 2026</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Target Launch</span>
+                            <span class="stat-value">August 20, 2026</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Tech Stack</span>
+                            <span class="stat-value" style="font-size: 14.5px; margin-top: 4px;">Nuxt 3 + Laravel 11</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Database</span>
+                            <span class="stat-value">MySQL (10+ tables)</span>
+                        </div>
+                    </div>
+
+                    <h3 class="dashboard-section-title">Dokumentasi Terkoneksi</h3>
+                    <div class="card-grid" id="dashboardCards">
+                        <!-- Dynamic Dashboard Cards -->
+                    </div>
+
+                    <div class="timeline-roadmap">
+                        <h3 class="dashboard-section-title" style="margin-bottom: 24px;">Project Roadmap & Phases</h3>
+                        <div class="timeline-steps">
+                            <div class="timeline-step" onclick="loadDoc('05_PROJECT_TIMELINE.md')">
+                                <div class="step-node">0</div>
+                                <span class="step-label">Phase 0</span>
+                                <span class="step-desc">Pre-Development (Week 1-2)</span>
+                            </div>
+                            <div class="timeline-step" onclick="loadDoc('05_PROJECT_TIMELINE.md')">
+                                <div class="step-node">1</div>
+                                <span class="step-label">Phase 1</span>
+                                <span class="step-desc">Core Features (Week 3-5)</span>
+                            </div>
+                            <div class="timeline-step" onclick="loadDoc('05_PROJECT_TIMELINE.md')">
+                                <div class="step-node">2</div>
+                                <span class="step-label">Phase 2</span>
+                                <span class="step-desc">Integration & QA (Week 6-7)</span>
+                            </div>
+                            <div class="timeline-step" onclick="loadDoc('05_PROJECT_TIMELINE.md')">
+                                <div class="step-node">3</div>
+                                <span class="step-label">Phase 3</span>
+                                <span class="step-desc">Launch Prep (Week 8)</span>
+                            </div>
+                            <div class="timeline-step" onclick="loadDoc('05_PROJECT_TIMELINE.md')">
+                                <div class="step-node">★</div>
+                                <span class="step-label">Growth</span>
+                                <span class="step-desc">Growth & Scale (Week 9+)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Markdown Content View -->
+                <div id="markdownView" class="markdown-content hidden"></div>
+
+                <!-- Raw View -->
+                <textarea id="rawView" class="raw-viewer hidden" readonly></textarea>
+
+                <!-- Search Results Page -->
+                <div id="searchResultsView" class="search-results-panel hidden">
+                    <h3 class="dashboard-section-title" id="searchResultsTitle">Search Results</h3>
+                    <div id="searchResultsList"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTATION STRINGS DATA -->
+    <script>
+        // We embed all documents as strings so this page functions 100% offline/double-clicked locally.
+        const EMBEDDED_DOCS = {
+            "00_DOCUMENTATION_INDEX.md": `# Documentation Index
+## Preset Lightroom E-Commerce Platform
+
+**Project Start Date:** May 20, 2026  
+**Target Launch:** August 20, 2026 (3 months)  
+**Documentation Version:** 1.0
+
+---
+
+## 📚 DOCUMENTATION OVERVIEW
+
+Ini adalah kumpulan lengkap dokumentasi untuk project Preset Lightroom E-Commerce Platform. Total 7 dokumen yang cover semua aspek dari business, product, technical, sampai execution.
+
+---
+
+## 📄 DOKUMEN DETAILS
+
+### 1. **BRD** - Business Requirements Document
+**File:** \`01_BRD.md\`  
+**Isi:** Business objectives, market analysis, revenue model, pricing strategy, scope, risks, success criteria  
+**Read this if:** Lo ingin understand business case dan goals project  
+**Key Sections:**
+- Executive summary
+- Market analysis & competitive landscape
+- Revenue model (pricing strategy)
+- Freemium business model details
+- Timeline & next steps
+
+**Tanggung Jawab:** Understand & approve sebelum mulai development
+
+---
+
+### 2. **PRODUCT SPECIFICATION** - Feature Details
+**File:** \`02_PRODUCT_SPECIFICATION.md\`  
+**Isi:** Detailed feature specs untuk setiap page, components, data flows, performance requirements  
+**Read this if:** Lo sedang design UI/UX atau explain features  
+**Key Sections:**
+- Home page design
+- Gallery page (1000 images)
+- Preset catalog & details
+- Shopping cart & checkout
+- Email subscriptions
+- User accounts
+- Performance targets (LCP, page load)
+
+**Tanggung Jawab:** Reference saat build UI
+
+---
+
+### 3. **TECHNICAL ARCHITECTURE** - System Design
+**File:** \`03_TECHNICAL_ARCHITECTURE.md\`  
+**Isi:** Tech stack, system architecture, database schema, file storage strategy, security, deployment  
+**Read this if:** Lo sedang setup development environment atau understand tech decisions  
+**Key Sections:**
+- Technology stack (Nuxt + Laravel + MySQL)
+- Database schema (10+ tables)
+- File storage (Cloudflare R2)
+- API middleware
+- Security architecture
+- Deployment architecture (staging & production)
+
+**Tanggung Jawab:** Setup architecture & database migrations
+
+---
+
+### 4. **USER STORIES & USE CASES** - User Flows
+**File:** \`04_USER_STORIES_USECASES.md\`  
+**Isi:** Detailed user stories (18 stories), personas, use cases, edge cases  
+**Read this if:** Lo ingin understand user journey & acceptance criteria  
+**Key Sections:**
+- 3 user personas (Hobby Harry, Creative Clara, Professional Pete)
+- 18 user stories dengan acceptance criteria
+- 4 detailed use cases (discover → purchase flow)
+- Edge cases & error scenarios
+
+**Tanggung Jawab:** Reference saat development untuk ensure acceptance criteria met
+
+---
+
+### 5. **PROJECT TIMELINE** - Week-by-Week Checklist
+**File:** \`05_PROJECT_TIMELINE.md\`  
+**Isi:** Detailed development timeline (8 weeks), phasing, checkpoints, dependencies  
+**Read this if:** Lo ingin track progress dan know apa yang perlu done each week  
+**Key Sections:**
+- Phase 0: Pre-development (Week 1-2)
+- Phase 1: Core development (Week 3-5)
+- Phase 2: Integration & testing (Week 6-7)
+- Phase 3: Launch (Week 8)
+- Post-launch growth (Week 9+)
+- Detailed checklist per week
+- Development checklist by component
+
+**Tanggung Jawab:** Use sebagai project management tool (check off items weekly)
+
+---
+
+### 6. **BRANDING GUIDE** - Brand Identity
+**File:** \`06_BRANDING_GUIDE.md\`  
+**Isi:** Brand name, logo, colors, typography, tone of voice, brand story  
+**Read this if:** Lo ingin decide branding sebelum design website  
+**Key Sections:**
+- Brand name options
+- Logo design
+- Color palette (dengan hex codes)
+- Typography (heading + body fonts)
+- Brand messaging & tagline
+- Photography style guidelines
+- Social media presence
+
+**Tanggung Jawab:** Finalize branding by Week 1, apply to website
+
+---
+
+### 7. **API SPECIFICATION** - Endpoint Documentation
+**File:** \`07_API_SPECIFICATION.md\`  
+**Isi:** Detailed API endpoints, request/response formats, error handling, webhooks  
+**Read this if:** Lo sedang build backend API atau frontend integrations  
+**Key Sections:**
+- 13 endpoint groups (auth, presets, cart, orders, etc)
+- Request/response examples (JSON)
+- Query parameters & validation
+- Error handling & HTTP codes
+- Rate limiting
+- Stripe webhook handler
+- Pagination
+
+**Tanggung Jawab:** Reference saat implement API endpoints
+
+---
+
+## 🗂️ HOW TO USE THIS DOCUMENTATION
+
+### For Business/Planning
+\`\`\`
+1. Read: BRD (01_BRD.md)
+   → Understand business model, revenue, success metrics
+   
+2. Reference: Branding Guide (06_BRANDING_GUIDE.md)
+   → Decide brand identity, colors, fonts
+   
+3. Track: Project Timeline (05_PROJECT_TIMELINE.md)
+   → Monitor progress, check off deliverables
+\`\`\`
+
+### For Product/Design
+\`\`\`
+1. Read: Product Specification (02_PRODUCT_SPECIFICATION.md)
+   → Understand all features in detail
+   
+2. Read: User Stories (04_USER_STORIES_USECASES.md)
+   → Know acceptance criteria for each feature
+   
+3. Reference: Branding Guide (06_BRANDING_GUIDE.md)
+   → Apply brand colors, typography, photography style
+\`\`\`
+
+### For Backend Development
+\`\`\`
+1. Read: Technical Architecture (03_TECHNICAL_ARCHITECTURE.md)
+   → Understand database schema, tech stack, deployment
+   
+2. Reference: API Specification (07_API_SPECIFICATION.md)
+   → Implement endpoints with correct request/response formats
+   
+3. Reference: User Stories (04_USER_STORIES_USECASES.md)
+   → Know what each endpoint should do
+   
+4. Use: Project Timeline (05_PROJECT_TIMELINE.md)
+   → Know deadline for each phase
+\`\`\`
+
+### For Frontend Development
+\`\`\`
+1. Read: Product Specification (02_PRODUCT_SPECIFICATION.md)
+   → Understand page layouts, components, flows
+   
+2. Reference: API Specification (07_API_SPECIFICATION.md)
+   → Know endpoint URLs and data formats
+   
+3. Reference: Branding Guide (06_BRANDING_GUIDE.md)
+   → Apply brand colors, fonts, spacing
+   
+4. Use: Project Timeline (05_PROJECT_TIMELINE.md)
+   → Know deadline for each page
+\`\`\`
+
+---
+
+## 🎯 KEY DECISIONS TO MAKE (This Week)
+
+- [ ] **Brand Name** - Choose from options or create custom
+- [ ] **Color Palette** - Finalize primary + secondary colors
+- [ ] **Typography** - Choose heading + body fonts
+- [ ] **Pricing** - Confirm free tier + paid pricing
+- [ ] **Preset Categories** - Finalize categories (landscape, portrait, etc)
+- [ ] **Free Tier Presets** - Choose which 3 presets for free
+- [ ] **Bundle Strategy** - Finalize bundle groupings (5-preset, all-preset)
+
+---
+
+## 📊 DEVELOPMENT PHASES
+
+\`\`\`
+PHASE 0 (Week 1-2): PRE-DEVELOPMENT
+├── Export & organize presets
+├── Prepare 1000 images (optimization)
+├── Design branding
+├── Setup development environment
+└── Create mockups
+
+PHASE 1 (Week 3-5): CORE DEVELOPMENT
+├── Backend: Auth, Presets, Orders, Payments
+├── Frontend: Home, Gallery, Catalog, Checkout
+├── Email automation
+└── File storage (Cloudflare R2)
+
+PHASE 2 (Week 6-7): INTEGRATION & TESTING
+├── End-to-end testing
+├── Payment flow testing
+├── Email testing
+├── Performance optimization
+└── Responsive design testing
+
+PHASE 3 (Week 8): LAUNCH PREPARATION
+├── Production deployment
+├── Analytics setup
+├── Soft launch (beta testing)
+├── Public launch
+└── Social marketing
+
+GROWTH (Week 9+): POST-LAUNCH
+├── Monitor metrics
+├── Customer support
+├── Email marketing
+└── Optimization
+\`\`\`
+
+---
+
+## 🔄 DEPENDENCIES & HANDOFF
+
+| Phase | Depends On | Responsibility |
+|-------|-----------|-----------------|
+| Phase 0 | None | Asset prep, branding |
+| Phase 1 | Phase 0 | Dev (backend + frontend) |
+| Phase 2 | Phase 1 | QA, testing, bug fixes |
+| Phase 3 | Phase 2 | Deployment, launch |
+| Growth | Phase 3 | Marketing, analytics |
+
+---
+
+## 📈 SUCCESS METRICS
+
+### Launch (Week 8)
+- ✅ Website fully functional
+- ✅ All pages responsive
+- ✅ Payment working
+- ✅ Lighthouse score 80+
+
+### Month 1
+- ✅ 100+ free downloads
+- ✅ 5-10 paid conversions
+- ✅ 200+ email subscribers
+
+### Month 3
+- ✅ 500+ free downloads
+- ✅ 30-50 paid conversions
+- ✅ $1,000+ revenue
+- ✅ 500+ email subscribers
+
+---
+
+## 🚀 QUICK START CHECKLIST
+
+**This Week (May 20-27):**
+- [ ] Read BRD + Branding Guide
+- [ ] Finalize brand decisions
+- [ ] Export all presets from Lightroom
+- [ ] Create preset inventory spreadsheet
+- [ ] Setup GitHub repo
+- [ ] Install development tools (Node.js, MySQL, etc)
+
+**Next Week (May 27 - June 3):**
+- [ ] Finalize branding (logo, colors, fonts)
+- [ ] Prepare 1000 images (resize, optimize)
+- [ ] Setup Nuxt + Laravel projects
+- [ ] Setup Stripe + SendGrid accounts
+- [ ] Create database schema
+
+**Week 3 (June 3-10):**
+- [ ] Start backend development (auth)
+- [ ] Start frontend development (home page)
+- [ ] Setup file storage (Cloudflare R2)
+
+---
+
+## 📞 QUESTIONS & DECISIONS
+
+### Brand Decisions Needed
+- [ ] Brand name (personal, descriptive, trendy?)
+- [ ] Color preference (dark elegant, minimalist, colorful?)
+- [ ] Photography aesthetic (consistent style)
+- [ ] Target audience clarity
+
+### Product Decisions Needed
+- [ ] Exact preset count (how many total?)
+- [ ] Bundle grouping strategy
+- [ ] Email frequency (weekly, monthly?)
+- [ ] Support channel (email only, or chat?)
+
+### Technical Decisions Already Made
+- ✅ Tech stack: Nuxt + Laravel (consistent with Juara League)
+- ✅ Payment: Stripe (can add Midtrans backup)
+- ✅ Email: SendGrid
+- ✅ File storage: Cloudflare R2
+- ✅ Database: MySQL
+- ✅ Hosting: VPS + Vercel (frontend)
+
+---
+
+## 📚 REFERENCE
+
+### Related Projects
+- Juara League (tournament platform): Nuxt + Laravel setup reference
+- Similar products: VSCO, FilterGrade, Peter McKinnon Presets
+
+### External Resources
+- Stripe documentation: https://stripe.com/docs
+- SendGrid documentation: https://sendgrid.com/docs
+- Cloudflare R2: https://developers.cloudflare.com/r2/
+- Nuxt 3: https://nuxt.com
+- Laravel: https://laravel.com
+
+---
+
+## 📝 DOCUMENT MAINTENANCE
+
+**Version:** 1.0  
+**Created:** May 18, 2026  
+**Last Updated:** May 18, 2026  
+**Next Review:** June 3, 2026 (end of Phase 0)  
+
+**Update Triggers:**
+- After each phase completion
+- After major scope changes
+- After customer feedback
+- Weekly during development (timeline checklist)
+
+---
+
+## 🎓 READING ORDER RECOMMENDATION
+
+**If you have 1 hour:**
+1. BRD (executive summary) - 10 min
+2. Product Specification (skim pages) - 15 min
+3. Project Timeline (phase overview) - 10 min
+4. Branding Guide (brand decisions) - 15 min
+
+**If you have 4 hours:**
+1. BRD (complete) - 30 min
+2. Product Specification (complete) - 60 min
+3. User Stories (skim) - 30 min
+4. Technical Architecture (overview) - 30 min
+5. Project Timeline (complete) - 30 min
+6. Branding Guide (complete) - 30 min
+7. API Specification (skim) - 30 min
+
+**If you have 1 day:**
+Read all 7 documents in order, taking notes
+
+---
+
+## ✅ SIGN-OFF CHECKLIST
+
+Before starting development, confirm:
+
+- [ ] All 7 documents reviewed and understood
+- [ ] Brand identity finalized
+- [ ] Pricing strategy agreed upon
+- [ ] Technology stack approved
+- [ ] Database schema understood
+- [ ] API endpoints documented
+- [ ] Development environment ready
+- [ ] GitHub repo created
+- [ ] Stripe account setup
+- [ ] SendGrid account setup
+- [ ] Cloudflare R2 bucket created
+- [ ] Timeline accepted (8 weeks to launch)
+
+---
+
+**This documentation is comprehensive and ready for development. Good luck! 🚀**
+
+---
+
+**Document Index Version:** 1.0  
+**Last Updated:** May 18, 2026`,
+
+            "01_BRD.md": `# Business Requirements Document (BRD)
+## Preset Lightroom E-Commerce Platform
+
+**Project Name:** Preset Lightroom E-Commerce Website  
+**Owner:** [Your Name]  
+**Date Created:** May 18, 2026  
+**Last Updated:** May 18, 2026  
+**Status:** Discovery Phase
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Membangun platform e-commerce untuk menjual Lightroom presets dengan model freemium + one-time purchase. Platform akan showcase 1000+ foto before-after sebagai gallery untuk demonstrate preset quality. Fokus pada user experience yang smooth, trust building melalui free tier, dan passive income generation.
+
+---
+
+## 2. BUSINESS OBJECTIVES
+
+### Primary Goals
+1. **Launch preset product line** dalam 1-2 bulan
+2. **Build trust** melalui freemium model (3 free presets)
+3. **Generate revenue** dari paid presets (individual + bundle)
+4. **Create scalable business** (passive income, minimal maintenance)
+5. **Build email list** untuk future marketing
+
+### Success Metrics
+- **Month 1-3:** 100+ downloads (free tier)
+- **Month 1-3:** 5-10 paid conversions
+- **Conversion rate target:** 2-5% (free → paid)
+- **Email list:** 500+ subscribers dalam 3 bulan
+- **Website traffic:** 1000+ unique visitors/month (target)
+
+---
+
+## 3. MARKET ANALYSIS
+
+### Target Audience
+1. **Primary:** Photography enthusiasts (hobbyist to semi-professional)
+   - Age: 20-45
+   - Platform: Instagram, YouTube, TikTok
+   - Pain point: "Color grading is too complicated"
+
+2. **Secondary:** Professional photographers
+   - Workflow efficiency seekers
+   - Willing to pay for quality
+
+3. **Tertiary:** Content creators
+   - Instagram/TikTok photographers
+   - Need consistent aesthetic
+   - Price sensitive but value quality
+
+### Competitive Landscape
+| Competitor | Model | Price Point | Strength |
+|---|---|---|---|
+| VSCO | Subscription | $10.99/mo | Large community |
+| FilterGrade | Marketplace | $5-50 | Variety, no subscription |
+| Peter McKinnon | One-time | $50-100 | Brand + quality |
+| Gumroad | Mixed | Varies | Easy distribution |
+
+**Our Advantage:**
+- Personal brand (direct relationship)
+- Quality samples (1000 photos)
+- Freemium trust builder
+- No subscription commitment
+
+---
+
+## 4. PRODUCT OVERVIEW
+
+### Product: Lightroom Presets + Gallery
+
+**What is a preset?**
+- File that saves Lightroom editing settings
+- One-click color grading solution
+- Works in Lightroom Classic, CC, Mobile
+
+**What we sell:**
+- Individual presets ($3.99 each)
+- Preset bundles ($14.99 - $39.99)
+- Free tier (3 presets, email capture)
+
+### Key Features
+1. **Gallery showcase** (1000+ photos)
+   - Before-after slider
+   - Filter by preset/category
+   - Lazy loading for performance
+
+2. **Freemium download** (email capture)
+   - 3 free presets
+   - Lead generation for email marketing
+
+3. **Preset catalog** (individual + bundle)
+   - Detailed product pages
+   - Installation guide
+   - Compatibility info
+
+4. **E-commerce** (cart + checkout)
+   - Stripe payment integration
+   - Automatic file delivery
+   - Order history for users
+
+---
+
+## 5. REVENUE MODEL
+
+### Pricing Strategy
+
+| Product | Price | Volume Assumption | Monthly Revenue |
+|---|---|---|---|
+| Individual Preset | $3.99 | 20 units | $80 |
+| Small Bundle (5) | $14.99 | 30 units | $450 |
+| Large Bundle (all) | $39.99 | 10 units | $400 |
+| **Monthly Total** | - | 60 units | **$930** |
+| **Yearly Total** | - | 720 units | **$11,160** |
+
+**Note:** Conservative estimate. Growth potential with marketing/social.
+
+### Cost Structure
+- **Hosting:** $50/month (VPS)
+- **Storage:** $10/month (Cloudflare R2)
+- **Email service:** $20/month (SendGrid)
+- **Domain:** $12/year
+- **Payment processor fee:** 2.9% + $0.30 per transaction
+- **Total fixed:** ~$80/month
+- **Gross margin:** ~75-85% (digital product)
+
+### Break-even
+- At $930/month revenue, profitable from month 1
+- Conservative estimate, actual likely higher with organic growth
+
+---
+
+## 6. BUSINESS MODEL
+
+### Freemium Strategy
+
+**Free Tier (Acquisition)**
+- 3 free presets (basic/versatile)
+- Requires email signup
+- Lead magnet for email marketing
+- Limited installation guide
+
+**Paid Tier (Monetization)**
+- Premium individual presets ($3.99)
+- Curated bundles ($14.99, $39.99)
+- One-time purchase (no subscription)
+- Includes detailed guide + customer support
+
+**Why freemium?**
+1. Low barrier to entry
+2. Build trust with quality product
+3. Email list building
+4. Conversion path: free user → paid customer
+5. Viral potential (users recommend)
+
+### Customer Acquisition Channels
+1. **Organic social** (Instagram, TikTok)
+   - Before-after showcase
+   - Testimonials
+   - User-generated content
+
+2. **Email marketing** (to free tier users)
+   - Welcome sequence
+   - New preset announcements
+   - Limited-time offers
+
+3. **Content marketing** (optional, phase 2)
+   - Blog: "Best presets for landscape"
+   - YouTube tutorials
+   - Collaboration with photographers
+
+4. **Affiliate program** (future)
+   - Encourage creator/influencer promotion
+
+---
+
+## 7. MONETIZATION TIMELINE
+
+| Phase | Timeline | Revenue | Action |
+|---|---|---|---|
+| **Phase 1: Launch** | Month 1-2 | $0 | Build + marketing prep |
+| **Phase 2: Soft launch** | Month 2 | $200-500 | Friends + email list |
+| **Phase 3: Public launch** | Month 3 | $500-1500 | Social marketing push |
+| **Phase 4: Growth** | Month 4-6 | $1500+ | Organic + referral |
+| **Phase 5: Optimize** | Month 6+ | $2000+ | Email marketing + upsell |
+
+---
+
+## 8. SCOPE DEFINITION
+
+### In Scope (MVP)
+- Website with gallery (1000 photos)
+- Free preset tier (3 presets)
+- Paid preset tier (individual + 2 bundles)
+- Stripe payment integration
+- Email capture for free tier
+- Account system (purchase history)
+- Installation guide + FAQ
+- Mobile responsive design
+
+### Out of Scope (Phase 2+)
+- Video tutorials (recorded later)
+- Blog/SEO content
+- Affiliate program
+- Subscription model
+- Mobile app
+- Community features
+- API for third-party integrations
+- Advanced analytics dashboard
+
+---
+
+## 9. ASSUMPTIONS & CONSTRAINTS
+
+### Assumptions
+1. Presets already created and working in Lightroom
+2. 1000 photos available for showcase
+3. Owner can manage basic marketing
+4. Launch in ~6-8 weeks is realistic
+5. Passive income model acceptable (low maintenance)
+
+### Constraints
+- **Technical:** Must use Nuxt + Laravel (existing stack)
+- **Time:** Launch santai, quality over speed
+- **Budget:** Minimal ($0-200/month hosting)
+- **Maintenance:** Low overhead (preset files don't need updating)
+
+---
+
+## 10. SUCCESS CRITERIA
+
+### Quantitative
+- ✅ Website live with all pages functional
+- ✅ 100+ free preset downloads (month 1-3)
+- ✅ 5-10 paid transactions (month 1-3)
+- ✅ 2-5% conversion rate (free → paid)
+- ✅ 500+ email list subscribers
+- ✅ Page load time <2 seconds
+- ✅ Mobile conversion rate >1.5%
+
+### Qualitative
+- ✅ Professional, cohesive brand image
+- ✅ Easy preset installation experience
+- ✅ High-quality before-after gallery
+- ✅ Positive customer feedback
+- ✅ Smooth payment experience (zero friction)
+
+---
+
+## 11. RISKS & MITIGATION
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Low conversion rate | Revenue impact | A/B test pricing, CTA copy |
+| Payment processing issues | Customer frustration | Test thoroughly, good error handling |
+| Gallery performance (1000 images) | UX degradation | Lazy loading, image optimization, CDN |
+| Market saturation | Competition | Focus on unique brand positioning |
+| Email deliverability | List building fails | Use reputable ESP (SendGrid), proper auth |
+
+---
+
+## 12. NEXT STEPS
+
+### Immediate (This week)
+- [ ] Finalize preset list (count, naming, categorization)
+- [ ] Export presets from Lightroom
+- [ ] Organize 1000 photos (metadata, optimization)
+- [ ] Create preset inventory spreadsheet
+- [ ] Design brand identity (name, logo, colors)
+
+### Short-term (Week 2-4)
+- [ ] Create before-after assets (3 per preset)
+- [ ] Set up development environment (Nuxt + Laravel)
+- [ ] Build database schema
+- [ ] Create detailed product specification
+- [ ] Develop UI mockups
+
+### Medium-term (Week 5-8)
+- [ ] Build Nuxt frontend (pages, components)
+- [ ] Build Laravel API (endpoints, payment integration)
+- [ ] Integrate Stripe payment
+- [ ] Set up email automation (SendGrid)
+- [ ] Deploy to staging
+
+### Launch (Week 8+)
+- [ ] Final testing (payment, email, downloads)
+- [ ] Soft launch (friends, email testers)
+- [ ] Public launch + social marketing
+- [ ] Monitor metrics + optimize
+
+---
+
+## 13. STAKEHOLDERS
+
+| Role | Name | Responsibility |
+|---|---|---|
+| Product Owner | [Your Name] | Vision, decision-making, marketing |
+| Developer | [Your Name] | Tech implementation |
+| Designer | [TBD] | Brand, UI/UX |
+
+---
+
+## APPENDIX: KEY DEFINITIONS
+
+**Preset:** File containing Lightroom editing settings  
+**Bundle:** Collection of presets sold together  
+**Freemium:** Free + premium tier model  
+**Conversion rate:** % of free users → paid customers  
+**Email capture:** Collecting email for marketing  
+**One-time purchase:** Non-subscription, permanent ownership  
+
+---
+
+**Document Version:** 1.0  
+**Next Review Date:** After 30 days of launch`,
+
+            "02_PRODUCT_SPECIFICATION.md": `# Product Specification Document
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Date:** May 18, 2026  
+**Status:** Ready for Development
+
+---
+
+## 1. PRODUCT OVERVIEW
+
+### Vision
+A beautiful, performance-optimized e-commerce platform for selling Lightroom presets with integrated before-after gallery showcase. Primary goal: build trust through freemium model, convert to paid through quality + brand.
+
+### Product Tiers
+
+| Tier | Users | Features | Revenue Impact |
+|---|---|---|---|
+| **Free** | Email-captured users | 3 free presets, email list | Lead generation |
+| **Paid Individual** | Customers | Buy 1 preset at a time | Direct revenue |
+| **Paid Bundle** | Power users | Buy 5-12 presets bundled | Higher AOV |
+
+---
+
+## 2. DETAILED FEATURE SPECIFICATIONS
+
+### A. HOME PAGE
+
+**Purpose:** Convert visitors → browsing or free preset download
+
+**Components:**
+1. **Header/Navigation**
+   - Logo + brand name
+   - Nav: Home, Gallery, Presets, How To Use, About
+   - Cart icon (shopping cart indicator)
+   - Account icon (login/register)
+
+2. **Hero Section**
+   - Eye-catching before-after slider (2-3 presets showcase)
+   - Headline: "Professional Color. One Click."
+   - Subheadline: "1000+ photos. Preset-ready."
+   - CTA button: "Explore Presets" (primary)
+   - Secondary CTA: "Download Free Presets" (secondary)
+   - Background: stunning preset-applied photo
+
+3. **Feature Highlight Section**
+   - 3 columns:
+     - Icon + "1000+ Examples" + description
+     - Icon + "One-Click Magic" + description
+     - Icon + "Instant Results" + description
+
+4. **Featured Presets Section**
+   - 4 preset cards (2x2 grid, responsive)
+   - Each card:
+     - Preset thumbnail
+     - Preset name
+     - Category tag
+     - Price
+     - "View Details" or "Add to Cart" button
+   - Show mix of free + paid to encourage exploration
+
+5. **Social Proof Section** (if data available)
+   - Star rating + testimonial
+   - "Join 500+ photographers" or similar
+   - User photos using presets (if available)
+
+6. **Free Presets CTA**
+   - Large section highlighting free tier
+   - "Get 3 Free Presets + Tips"
+   - Email input field
+   - "Download Now" button
+   - Copy: "No credit card. No spam. Just presets."
+
+7. **Footer**
+   - Quick links (About, FAQ, Support, Privacy)
+   - Social links
+   - Email signup alternative
+   - Copyright
+
+---
+
+### B. GALLERY PAGE
+
+**Purpose:** Showcase 1000+ photos, let users explore presets visually
+
+**Design:**
+- Grid layout (responsive: 1 column mobile, 3-4 desktop)
+- Lazy loading (load 20 images initially, load more on scroll)
+- Image optimization (optimized file sizes)
+
+**Features:**
+
+1. **Filter Panel** (sticky, mobile: collapsible)
+   - Filter by preset: dropdown with all presets
+   - Filter by category: "Landscape", "Portrait", "B&W", "Moody", "Bright", etc.
+   - Filter by camera brand (optional, phase 2)
+   - Reset filters button
+   - Active filter display ("Showing 45 images for 'Warm Golden'")
+
+2. **Image Grid**
+   - Thumbnail display
+   - Hover effect: show preset name overlay
+   - Click: open lightbox modal
+
+3. **Lightbox Modal** (on click)
+   - Full resolution image (but optimized)
+   - Before-after slider (interactive, drag to compare)
+   - Preset name + category
+   - "Add to Cart" button (prominent)
+   - "Download Free Preset" button (if free)
+   - Navigation: prev/next image
+   - Close button
+
+4. **Sorting**
+   - Sort by: Newest, Most Popular, Price (low-high, high-low)
+   - Display count: "Showing 120 / 450 images"
+
+5. **Performance Optimization**
+   - Lazy loading images (Intersection Observer)
+   - WebP format with fallback
+   - Thumbnail size: max 400px
+   - Full size: max 1200px
+   - Target load time: <1 second for 20 images
+
+---
+
+### C. PRESETS CATALOG PAGE
+
+**Purpose:** Browse, compare, and buy presets
+
+**Layout:**
+- Sidebar filter (desktop) / top filter (mobile)
+- Grid of preset cards (3-4 columns, responsive)
+
+**Preset Card Components:**
+- Thumbnail image (best before-after sample)
+- Preset name
+- Category tag
+- Short description (1 line)
+- Price (if paid) / "Free" badge (if free)
+- "View Details" button (primary)
+- "Add to Cart" button (if paid, secondary)
+- Star rating (optional, future)
+
+**Filters:**
+- Category: All, Landscape, Portrait, B&W, Moody, Bright, Vintage, etc.
+- Price: Free, Under $5, $5-15, $15+
+- Compatibility: All, Lightroom CC, Lightroom Classic, Mobile
+
+**Sorting:**
+- Newest first
+- Most popular
+- Price: low-high, high-low
+
+**Pagination:**
+- Show 12 presets per page
+- "Load more" button or pagination arrows
+
+---
+
+### D. INDIVIDUAL PRESET PAGE
+
+**Purpose:** Detailed product page for single preset (or bundle)
+
+**Components:**
+
+1. **Breadcrumb Navigation**
+   - Home > Presets > [Category] > [Preset Name]
+
+2. **Preset Gallery** (left side, desktop; top mobile)
+   - Main image (best before-after sample)
+   - Thumbnail gallery below (3-5 related images)
+   - Click thumbnail to switch main image
+   - Before-after slider on hover/click
+
+3. **Product Info** (right side, desktop; below mobile)
+   - **Preset Name** (large heading)
+   - **Category** (tag)
+   - **Price** (large, if paid)
+   - **Rating** (stars, if available, future)
+   
+   **Description:**
+   - 1-2 paragraph about preset
+   - Key benefits (bullet points, 3-5 items)
+   - Best for: [use cases]
+   - Mood: [aesthetic description]
+   
+   **Specifications:**
+   - Compatibility: Lightroom Classic ✓, Lightroom CC ✓, Mobile ✓
+   - File size: XXX KB
+   - Adjustment intensity: Light / Medium / Strong
+   
+   **Action Buttons:**
+   - Primary: "Add to Cart" (paid) or "Download Free Preset" (free)
+   - Secondary: "View in Gallery" (link to gallery filtered by this preset)
+
+4. **Installation Instructions**
+   - Expandable section
+   - Step-by-step with screenshots
+   - Video link (if available)
+   - Troubleshooting link
+
+5. **Related Presets**
+   - 3-4 similar presets carousel
+   - "You might also like..."
+   - Click to navigate to their pages
+
+6. **Customer Reviews** (phase 2)
+   - Star rating
+   - Review text
+   - Author name
+   - Date
+
+---
+
+### E. BUNDLES PAGE
+
+**Similar to Catalog, but for bundles**
+
+**Bundle Card:**
+- Bundle name
+- Cover image (grid of preset thumbnails)
+- Number of presets included: "5 Presets"
+- Price
+- "View Bundle" button
+
+**Bundle Detail Page:**
+- Similar layout to individual preset
+- Bundle composition: list of presets included with small thumbnails
+- Bundle benefit copy
+- Total value if bought individually
+- Discount percentage
+- "Add to Cart" button
+- Reviews (future)
+
+**Bundle Strategy:**
+- Small Bundle: 5 presets, $14.99 (themed: landscape, portrait, etc)
+- Large Bundle: All presets, $39.99
+- (Can add more bundles based on popularity)
+
+---
+
+### F. FREE PRESETS SECTION / EMAIL CAPTURE
+
+**Location:** 
+- Dedicated page: /free-presets
+- Also on home page as prominent CTA
+- Accessible via nav menu
+
+**Design:**
+- Large hero section with free preset showcase
+- 3 preset cards displayed
+- Each preset shows before-after slider
+
+**Email Capture Form:**
+\`\`\`
+Layout:
+- Headline: "Get 3 Free Presets"
+- Subheadline: "Join 500+ photographers. No spam."
+- Form fields:
+  - Email (required)
+  - First name (optional)
+  - Photography type: dropdown (Landscape, Portrait, etc) [optional]
+- CTA button: "Download Free Presets"
+- Privacy note: "We respect your inbox."
+\`\`\`
+
+**Post-Submit Flow:**
+1. Form submitted
+2. Backend validation
+3. User created (if new)
+4. Confirmation email sent
+   - "Thanks! Check your email..."
+   - Download links for 3 presets
+   - Installation guide
+   - Discount code: "WELCOME15" (15% off)
+   - Social follow CTA
+
+**Email Content:**
+- Subject: "Your 3 Free Presets Are Ready ✨"
+- Body:
+  - Welcome message
+  - 3 download links
+  - Brief installation guide
+  - "Upgrade to premium" soft sell
+  - Social links
+
+---
+
+### G. HOW TO USE PAGE
+
+**Purpose:** Help users install and use presets
+
+**Sections:**
+
+1. **Installation Guide**
+   - For Lightroom Classic (step-by-step)
+   - For Lightroom CC (step-by-step)
+   - For Lightroom Mobile (step-by-step)
+   - Screenshots for each step
+   - Video embed (YouTube)
+
+2. **Using Presets**
+   - Basic tips (exposure adjustment, etc)
+   - Combining presets
+   - Creating custom variations
+   - Exporting settings
+
+3. **Troubleshooting**
+   - "Preset not showing up"
+   - "Color doesn't match"
+   - "File won't open"
+   - "Support contact"
+
+4. **FAQ**
+   - "Which Lightroom version do I need?"
+   - "Can I use on multiple computers?"
+   - "Can I share presets?"
+   - "Money-back guarantee?"
+   - "Do presets work on RAW/JPG?"
+   - Contact support link
+
+---
+
+### H. ABOUT PAGE
+
+**Sections:**
+
+1. **Story / Origin**
+   - Who you are
+   - Why you created presets
+   - Photography journey (brief)
+   - 2-3 paragraphs max
+
+2. **Values / Philosophy**
+   - Quality first
+   - Simplicity
+   - Customer-first
+   - 3 core values
+
+3. **Social Proof**
+   - If available: testimonials
+   - Photography statistics
+   - Following count
+   - Contact/social links
+
+---
+
+### I. SHOPPING CART
+
+**Features:**
+- Persistent cart (localStorage or logged-in user)
+- Cart icon in header shows item count
+- Cart page shows:
+  - Items: preset/bundle thumbnail, name, price, quantity, remove button
+  - Subtotal
+  - Tax (if applicable)
+  - Total
+  - "Proceed to Checkout" button
+  - "Continue Shopping" button
+
+**Cart Rules:**
+- Presets: quantity 1 only (can't buy same preset twice)
+- If already owned, show "You already own this" message
+
+---
+
+### J. CHECKOUT
+
+**Page Flow:**
+1. **Cart Review** (pre-filled if coming from cart)
+   - List items
+   - Prices visible
+   - Can edit quantities
+
+2. **Customer Info**
+   - Email
+   - Name
+   - Country (for tax/compliance)
+   - Billing address (if required)
+
+3. **Payment**
+   - Stripe integration (card payment)
+   - "Pay $XX.XX" button
+   - Loading state
+
+4. **Confirmation**
+   - Order number
+   - Thank you message
+   - Download links (for digital files)
+   - Email confirmation notice
+   - Installation guide link
+   - Support contact
+
+---
+
+### K. USER ACCOUNT PAGE (Logged In)
+
+**Profile Section:**
+- Display name
+- Email
+- Password change
+- Delete account
+
+**Purchase History:**
+- List of orders
+- Order date, amount, presets purchased
+- Download links (access files again)
+- Receipt (PDF downloadable)
+
+**Email Preferences:**
+- Subscribe/unsubscribe to marketing emails
+- Email frequency preference
+
+---
+
+### L. AUTHENTICATION
+
+**Sign Up:**
+- Email + password
+- Validate email uniqueness
+- Send confirmation email
+- Store password hashed (bcrypt)
+
+**Login:**
+- Email + password
+- Remember me (optional)
+- Forgot password (reset link via email)
+
+**OAuth (Future):**
+- Google login option
+- Social account linking
+
+---
+
+## 3. DATA DISPLAY SPECIFICATIONS
+
+### Gallery Gallery Grid
+\`\`\`
+Mobile (1 column):
+- Image width: 100% of screen
+- 1 image per row
+- Load 10 images initially
+
+Tablet (2 columns):
+- Image width: 48% each with gap
+- 2 images per row
+- Load 20 images initially
+
+Desktop (3-4 columns):
+- Image width: responsive to grid
+- 3-4 images per row
+- Load 20 images initially
+\`\`\`
+
+### Image Optimization
+- Format: JPEG with WebP fallback
+- Thumbnail: max 400px width, 300KB
+- Full: max 1200px width, 500KB
+- Before-after pair: 600KB combined
+- Lazy loading with blur-up placeholder
+
+---
+
+## 4. SEARCH & FILTERING LOGIC
+
+### Preset Search
+- Query field: search by preset name
+- Returns: matching presets only
+- Real-time (debounced 300ms)
+
+### Gallery Filters
+- Preset filter: single select (OR logic if multi-select future)
+- Category filter: single select
+- Both filters combined: AND logic
+- Reset button: clears all filters
+
+### Filter Persistence
+- URL parameters: ?preset=warm-golden&category=landscape
+- Bookmarkable filters
+- Share filtered gallery link
+
+---
+
+## 5. PERFORMANCE REQUIREMENTS
+
+| Metric | Target | Priority |
+|---|---|---|
+| Home page load | <2s (LCP) | High |
+| Gallery first load | <2s | High |
+| Image lazy load | <1s per 20 images | High |
+| Checkout load | <1s | High |
+| API response | <200ms | Medium |
+| Lighthouse score | 90+ | Medium |
+
+---
+
+## 6. SECURITY REQUIREMENTS
+
+- [ ] HTTPS only
+- [ ] Password hashing (bcrypt)
+- [ ] CSRF protection
+- [ ] Rate limiting on API (prevent abuse)
+- [ ] Email validation (prevent spam signup)
+- [ ] Payment PCI compliance (Stripe handles)
+- [ ] File access control (only purchased files)
+
+---
+
+## 7. MOBILE RESPONSIVENESS
+
+**Breakpoints:**
+- Mobile: 0-640px
+- Tablet: 641-1024px
+- Desktop: 1025px+
+
+**Mobile-Specific:**
+- Single column layouts
+- Collapsible filters
+- Large touch targets (44px minimum)
+- Optimized images (smaller file sizes)
+- No hover states (touch-friendly)
+
+---
+
+## 8. ANALYTICS & TRACKING
+
+**Events to track:**
+- Page views (GA4)
+- Free preset downloads
+- Add to cart
+- Checkout initiated
+- Purchase completed
+- Preset details viewed
+- Gallery filters used
+
+**Metrics to monitor:**
+- Conversion funnel (visitor → free → paid)
+- Average order value (AOV)
+- Cart abandonment rate
+- Email conversion rate
+- Most popular presets
+- Traffic sources
+
+---
+
+## 9. EMAIL AUTOMATION SEQUENCE
+
+### Welcome Sequence (Free Preset Subscriber)
+**Email 1 (immediate):**
+- Subject: "Your 3 Free Presets Are Ready ✨"
+- Body: Welcome + download links + installation guide
+- CTA: "Get Started with Presets"
+
+**Email 2 (Day 3):**
+- Subject: "One preset away from the perfect look"
+- Body: Showcase popular paid preset
+- CTA: "Explore Premium Presets"
+- Discount: "WELCOME15" (15% off)
+
+**Email 3 (Day 7):**
+- Subject: "How I created presets for 10,000 photos"
+- Body: Your story / brand story
+- CTA: "Learn About Me"
+
+### Promotional Sequence
+**On new preset launch:**
+- Email to list: "New preset: [Name]"
+- Early access: 24h discount code
+- Features + benefits
+- Gallery link + CTA
+
+---
+
+## 10. FUTURE FEATURES (Phase 2+)
+
+- [ ] Video tutorials (YouTube embedded)
+- [ ] Blog/SEO content
+- [ ] User testimonials/reviews
+- [ ] Affiliate program
+- [ ] Preset customization service
+- [ ] Presets for Capture One, Adobe Camera Raw
+- [ ] Community forum / user gallery
+- [ ] Advanced analytics dashboard
+- [ ] Subscription model option
+- [ ] Desktop app for preset management
+- [ ] Mobile app`,
+
+            "03_TECHNICAL_ARCHITECTURE.md": `# Technical Architecture & Database Schema
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Date:** May 18, 2026  
+**Tech Stack:** Nuxt 3, Laravel 11, MySQL, Stripe, Cloudflare R2
+
+---
+
+## 1. SYSTEM ARCHITECTURE OVERVIEW
+
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│                     CLIENT LAYER                        │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Nuxt 3 (Vue 3) - Frontend Application           │   │
+│  │  - Home, Gallery, Catalog, Checkout              │   │
+│  │  - Responsive, SSR-friendly                      │   │
+│  └──────────────────────────────────────────────────┘   │
+└──────────────────────┬──────────────────────────────────┘
+                       │ API Calls (HTTP/REST)
+                       ↓
+┌─────────────────────────────────────────────────────────┐
+│                     API LAYER (Middleware)              │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Next.js API Routes / Laravel Reverb (WebSocket) │   │
+│  │  - Authentication (Sanctum)                      │   │
+│  │  - Rate limiting, CORS handling                  │   │
+│  └──────────────────────────────────────────────────┘   │
+└──────────────────────┬──────────────────────────────────┘
+                       │ API Calls (HTTP/REST)
+                       ↓
+┌─────────────────────────────────────────────────────────┐
+│                  BACKEND LAYER                          │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Laravel 11 API (Controllers, Models, Services)  │   │
+│  │  - Preset management                             │   │
+│  │  - Order processing                              │   │
+│  │  - Payment handling (Stripe integration)         │   │
+│  │  - Email automation (SendGrid)                   │   │
+│  │  - File delivery (Cloudflare R2)                 │   │
+│  └──────────────────────────────────────────────────┘   │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+        ┌──────────────┼──────────────┐
+        ↓              ↓              ↓
+  ┌──────────┐  ┌──────────┐  ┌──────────────┐
+  │  MySQL   │  │Cloudflare│  │  SendGrid    │
+  │Database  │  │    R2    │  │  / Stripe    │
+  └──────────┘  └──────────┘  └──────────────┘
+\`\`\`
+
+---
+
+## 2. TECHNOLOGY STACK DETAILS
+
+### Frontend
+\`\`\`
+Framework:    Nuxt 3 (Vue 3)
+Build Tool:   Vite
+Styling:      Tailwind CSS + Sass
+State:        Pinia (global state)
+HTTP Client:  axios + interceptors
+Image:        vue-image-compare (before-after slider)
+Forms:        VeeValidate + Zod
+Analytics:    Google Analytics 4
+\`\`\`
+
+### Backend
+\`\`\`
+Framework:    Laravel 11
+API Style:    RESTful JSON
+Authentication: Laravel Sanctum (JWT)
+Payment:      Stripe SDK
+Email:        SendGrid (Mailable classes)
+File Storage: Cloudflare R2 (S3-compatible)
+Queue:        (optional, for async file processing)
+Database:     MySQL 8.0+
+Validation:   Laravel Validation + Custom Rules
+\`\`\`
+
+### Infrastructure
+\`\`\`
+Frontend Hosting:    Vercel or Netlify (Nuxt SSR)
+Backend Hosting:     VPS (DigitalOcean / Linode)
+Web Server:          Nginx
+Process Manager:     Supervisor (Laravel artisan)
+Database:            MySQL managed or self-hosted
+File Storage:        Cloudflare R2
+Email Service:       SendGrid
+Payment Processor:   Stripe
+DNS/CDN:             Cloudflare
+\`\`\`
+
+---
+
+## 3. DATABASE SCHEMA
+
+### Users Table
+\`\`\`sql
+CREATE TABLE users (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  email_verified_at TIMESTAMP NULL,
+  avatar_url VARCHAR(255) NULL,
+  
+  -- Preferences
+  newsletter_subscribed BOOLEAN DEFAULT TRUE,
+  newsletter_frequency ENUM('daily', 'weekly', 'monthly') DEFAULT 'weekly',
+  
+  -- Metadata
+  last_login_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL (soft delete)
+);
+
+CREATE INDEX idx_email ON users(email);
+CREATE INDEX idx_created_at ON users(created_at);
+\`\`\`
+
+### Presets Table
+\`\`\`sql
+CREATE TABLE presets (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Identification
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  category ENUM('landscape', 'portrait', 'bw', 'moody', 'bright', 'vintage', 'cinematic', 'other') NOT NULL,
+  
+  -- Pricing & Status
+  price_cents INT UNSIGNED DEFAULT 0, -- $0 = free, $3.99 = 399
+  is_free BOOLEAN DEFAULT FALSE,
+  is_active BOOLEAN DEFAULT TRUE,
+  
+  -- Files & Assets
+  file_url VARCHAR(255) NOT NULL, -- Cloudflare R2 path
+  file_size_kb INT,
+  thumbnail_url VARCHAR(255) NOT NULL,
+  
+  -- Metadata
+  compatibility VARCHAR(255), -- 'Lightroom Classic,Lightroom CC,Mobile'
+  adjustment_intensity ENUM('light', 'medium', 'strong') DEFAULT 'medium',
+  
+  -- Sorting & Engagement
+  sort_order INT DEFAULT 0,
+  download_count INT UNSIGNED DEFAULT 0,
+  rating DECIMAL(2,1) DEFAULT 0,
+  review_count INT UNSIGNED DEFAULT 0,
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
+);
+
+CREATE INDEX idx_category ON presets(category);
+CREATE INDEX idx_price ON presets(price_cents);
+CREATE INDEX idx_is_active ON presets(is_active);
+CREATE INDEX idx_slug ON presets(slug);
+\`\`\`
+
+### Preset Images Table
+\`\`\`sql
+CREATE TABLE preset_images (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Relationship
+  preset_id BIGINT UNSIGNED NOT NULL,
+  FOREIGN KEY (preset_id) REFERENCES presets(id) ON DELETE CASCADE,
+  
+  -- Image URLs
+  before_image_url VARCHAR(255) NOT NULL,
+  after_image_url VARCHAR(255) NOT NULL,
+  before_image_size_kb INT,
+  after_image_size_kb INT,
+  
+  -- Metadata
+  sort_order INT DEFAULT 0,
+  alt_text VARCHAR(255),
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_preset_id ON preset_images(preset_id);
+CREATE INDEX idx_sort_order ON preset_images(sort_order);
+\`\`\`
+
+### Bundles Table
+\`\`\`sql
+CREATE TABLE bundles (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Identification
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  
+  -- Pricing
+  price_cents INT UNSIGNED NOT NULL,
+  
+  -- Assets
+  thumbnail_url VARCHAR(255),
+  
+  -- Status
+  is_active BOOLEAN DEFAULT TRUE,
+  sort_order INT DEFAULT 0,
+  
+  -- Engagement
+  download_count INT UNSIGNED DEFAULT 0,
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_is_active ON bundles(is_active);
+CREATE INDEX idx_price ON bundles(price_cents);
+\`\`\`
+
+### Bundle Presets Table (Many-to-Many)
+\`\`\`sql
+CREATE TABLE bundle_presets (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Relationships
+  bundle_id BIGINT UNSIGNED NOT NULL,
+  preset_id BIGINT UNSIGNED NOT NULL,
+  
+  FOREIGN KEY (bundle_id) REFERENCES bundles(id) ON DELETE CASCADE,
+  FOREIGN KEY (preset_id) REFERENCES presets(id) ON DELETE CASCADE,
+  
+  -- Metadata
+  sort_order INT DEFAULT 0,
+  
+  -- Prevent duplicates
+  UNIQUE KEY unique_bundle_preset (bundle_id, preset_id),
+  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_bundle_id ON bundle_presets(bundle_id);
+CREATE INDEX idx_preset_id ON bundle_presets(preset_id);
+\`\`\`
+
+### Orders Table
+\`\`\`sql
+CREATE TABLE orders (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Relationship
+  user_id BIGINT UNSIGNED NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  
+  -- Order Details
+  order_number VARCHAR(255) UNIQUE NOT NULL,
+  status ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
+  
+  -- Pricing
+  subtotal_cents INT UNSIGNED NOT NULL,
+  tax_cents INT UNSIGNED DEFAULT 0,
+  total_cents INT UNSIGNED NOT NULL,
+  
+  -- Payment
+  stripe_payment_intent_id VARCHAR(255) UNIQUE,
+  payment_method VARCHAR(50), -- 'card', 'transfer', etc
+  
+  -- Customer Info
+  customer_email VARCHAR(255) NOT NULL,
+  customer_name VARCHAR(255) NOT NULL,
+  customer_country VARCHAR(2),
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  completed_at TIMESTAMP NULL,
+  refunded_at TIMESTAMP NULL
+);
+
+CREATE INDEX idx_user_id ON orders(user_id);
+CREATE INDEX idx_status ON orders(status);
+CREATE INDEX idx_created_at ON orders(created_at);
+CREATE INDEX idx_stripe_payment ON orders(stripe_payment_intent_id);
+\`\`\`
+
+### Order Items Table
+\`\`\`sql
+CREATE TABLE order_items (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Relationship
+  order_id BIGINT UNSIGNED NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  
+  -- Preset or Bundle (one will be set)
+  preset_id BIGINT UNSIGNED NULL,
+  bundle_id BIGINT UNSIGNED NULL,
+  
+  FOREIGN KEY (preset_id) REFERENCES presets(id) ON DELETE SET NULL,
+  FOREIGN KEY (bundle_id) REFERENCES bundles(id) ON DELETE SET NULL,
+  
+  -- Pricing at time of purchase
+  price_cents INT UNSIGNED NOT NULL,
+  
+  -- Quantity (normally 1)
+  quantity INT UNSIGNED DEFAULT 1,
+  
+  -- Metadata
+  preset_name VARCHAR(255),
+  bundle_name VARCHAR(255),
+  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_order_id ON order_items(order_id);
+CREATE INDEX idx_preset_id ON order_items(preset_id);
+CREATE INDEX idx_bundle_id ON order_items(bundle_id);
+\`\`\`
+
+### User Downloads Table (Purchase History)
+\`\`\`sql
+CREATE TABLE user_downloads (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Relationships
+  user_id BIGINT UNSIGNED NOT NULL,
+  order_id BIGINT UNSIGNED NOT NULL,
+  preset_id BIGINT UNSIGNED NOT NULL,
+  
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (preset_id) REFERENCES presets(id) ON DELETE CASCADE,
+  
+  -- Access tracking
+  download_count INT UNSIGNED DEFAULT 0,
+  last_downloaded_at TIMESTAMP NULL,
+  
+  -- Prevent duplicates (user buys same preset twice in different bundles)
+  UNIQUE KEY unique_user_preset (user_id, preset_id),
+  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_user_id ON user_downloads(user_id);
+CREATE INDEX idx_preset_id ON user_downloads(preset_id);
+\`\`\`
+
+### Email Subscriptions Table
+\`\`\`sql
+CREATE TABLE email_subscriptions (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  
+  -- Email (not necessarily user)
+  email VARCHAR(255) NOT NULL,
+  
+  -- Status
+  subscribed BOOLEAN DEFAULT TRUE,
+  subscription_source ENUM('free_preset', 'cart_abandonment', 'homepage', 'manual') DEFAULT 'free_preset',
+  
+  -- Preferences
+  newsletter_frequency ENUM('daily', 'weekly', 'monthly', 'promotional_only') DEFAULT 'weekly',
+  
+  -- Validation
+  confirmation_token VARCHAR(255) UNIQUE NULL,
+  confirmed_at TIMESTAMP NULL,
+  
+  -- Engagement
+  last_email_sent_at TIMESTAMP NULL,
+  unsubscribed_at TIMESTAMP NULL,
+  
+  -- Metadata
+  utm_source VARCHAR(255) NULL,
+  utm_campaign VARCHAR(255) NULL,
+  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  UNIQUE KEY unique_email (email)
+);
+
+CREATE INDEX idx_subscribed ON email_subscriptions(subscribed);
+CREATE INDEX idx_created_at ON email_subscriptions(created_at);
+\`\`\`
+
+---
+
+## 4. API ENDPOINTS SPECIFICATION
+
+See detailed documentation in \`07_API_SPECIFICATION.md\`.
+
+---
+
+## 5. FILE STORAGE STRATEGY
+
+### Cloudflare R2 Structure
+\`\`\`
+preset-lightroom-app/
+├── presets/
+│   ├── lightroom_classic/
+│   │   └── andrian_warmgolden_v1.0.lrtemplate
+│   ├── lightroom_cc/
+│   │   └── andrian_warmgolden_v1.0.xmp
+│   └── lightroom_mobile/
+│       └── andrian_warmgolden_v1.0.dng
+│
+├── images/
+│   ├── gallery/
+│   │   ├── warmgolden_before_001.jpg
+│   │   ├── warmgolden_after_001.jpg
+│   │   └── ... (1000+ images)
+│   ├── thumbnails/
+│   │   └── ... (optimized 400px versions)
+│   └── presets_covers/
+│       └── ... (preset showcase images)
+│
+└── temp/
+    └── ... (temporary files for processing)
+\`\`\`
+
+### File Delivery Strategy
+1. Purchase → Order created in DB
+2. User click "Download"
+3. Backend generates pre-signed URL (expires in 24h)
+4. Frontend initiates download from R2
+5. No direct access tokens exposed
+
+---
+
+## 6. SECURITY ARCHITECTURE
+
+### Authentication Flow
+- Laravel Sanctum with Secure HTTPOnly cookies.
+- CSRF Protection enabled for web sessions.
+- Hashed passwords using bcrypt.
+
+### Payment Security
+- Stripe SDK integration (PCI-DSS Compliant).
+- Webhook signature validation.
+
+---
+
+## 7. PERFORMANCE OPTIMIZATION
+
+- MySQL database indexations on active/category columns.
+- Intersection Observer based lazy loading for gallery grid.
+- WebP conversions for optimal asset sizing.
+- Cloudflare CDN caching for static files.
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** May 18, 2026`,
+
+            "04_USER_STORIES_USECASES.md": `# User Stories & Use Cases
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Date:** May 18, 2026
+
+---
+
+## 1. USER PERSONAS
+
+### Persona 1: "Hobby Harry" - Amateur Photographer
+- Age: 28, hobbyist photographer
+- Pain point: Color grading is confusing, wants consistent results
+- Motivation: Save time, improve photo quality
+- Budget: Willing to spend $10-20/month on presets
+- Tech comfort: Medium
+- Primary platform: Instagram, occasional photography walks
+
+**Goals with product:**
+- Download free presets to try
+- Find presets for landscape/travel photography
+- Simple installation process
+- Quick results without learning curve
+
+---
+
+### Persona 2: "Creative Clara" - Content Creator
+- Age: 24, Instagram/TikTok creator
+- Pain point: Needs consistent aesthetic across photos
+- Motivation: Build brand identity, increase engagement
+- Budget: $20-50 for tool suite
+- Tech comfort: High
+- Primary platform: Instagram, TikTok, YouTube
+
+**Goals with product:**
+- Browse gallery for inspiration
+- Purchase bundle of presets
+- Use presets across multiple photos
+- Share results with community
+
+---
+
+### Persona 3: "Professional Pete" - Professional Photographer
+- Age: 42, professional photographer
+- Pain point: Workflow efficiency, consistent color grading
+- Motivation: Save editing time, better client results
+- Budget: $50-100+ for professional tools
+- Tech comfort: High
+- Primary platform: Website, client delivery
+
+**Goals with product:**
+- Review before-after samples for quality assurance
+- Purchase all presets (bundle)
+- Integrate into workflow
+- Technical compatibility information
+
+---
+
+## 2. USER STORIES
+
+### Free Preset Download Flow
+
+**US-1: User Discovers Free Presets**
+\`\`\`
+AS A        photographer interested in presets
+WHEN        I visit the website
+THEN        I see prominent free preset offer
+AND         I understand what presets are
+SO THAT     I'm encouraged to download and try
+\`\`\`
+*Acceptance Criteria:*
+- Home page has free preset CTA above fold
+- Clear messaging: "Get 3 free presets, no credit card needed"
+- Preview of free presets visible (before-after)
+
+---
+
+**US-2: User Downloads Free Presets**
+\`\`\`
+AS A        photographer wanting to try presets
+WHEN        I click "Download Free Presets"
+THEN        I see email capture form
+AND         I enter email (+ optional name)
+AND         I receive email with download links
+SO THAT     I can install and use presets immediately
+\`\`\`
+*Acceptance Criteria:*
+- Modal/form appears with email input
+- Email validation works
+- Confirmation email sent within 1 minute
+- Email contains 3 download links + installation guide
+
+---
+
+### Preset Discovery & Browsing
+
+**US-4: User Explores Gallery**
+\`\`\`
+AS A        photographer looking for preset ideas
+WHEN        I visit the gallery page
+THEN        I see 1000+ before-after photos
+AND         I can filter by preset or category
+AND         images load smoothly
+SO THAT     I can explore and find presets I like
+\`\`\`
+*Acceptance Criteria:*
+- Gallery loads with 20 images (lazy load)
+- Filter by preset (dropdown)
+- Filter by category (dropdown/buttons)
+- Click image to view full size + before-after slider
+
+---
+
+## 3. USE CASES
+
+### Use Case 1: "Discover and Purchase"
+**Actor:** Hobby Harry (amateur photographer)
+
+**Flow:**
+1. User lands on homepage
+2. Sees "Download 3 Free Presets" CTA
+3. Clicks button → email signup form
+4. Enters email → receives confirmation email
+5. Clicks link in email → downloads 3 free presets
+6. Installs presets in Lightroom
+7. Tries presets on photos → impressed
+8. Returns to website
+9. Browses preset catalog
+10. Sees "Warm Golden" preset in gallery
+11. Clicks image → sees before-after slider
+12. Impressed → clicks "Add to Cart"
+13. Proceeds to checkout
+14. Enters email, pays with card
+15. Downloads paid preset
+
+**Result:** Converts free user → paid customer
+
+---
+
+## 4. EDGE CASES & ERROR SCENARIOS
+
+### Edge Case 1: Duplicate Purchase
+**Scenario:** User already owns preset A, tries to buy again.
+- **Expected Behavior:** System detects duplicate, blocks cart addition and shows "You already own this preset" with a direct link to the account download tab.
+
+### Edge Case 2: Cart Abandonment
+- **Expected Behavior:** Cart persists in LocalStorage. After 24h of inactivity, sends a single re-engagement discount code if user has registered an email.
+
+---
+
+**Document Version:** 1.0`,
+
+            "05_PROJECT_TIMELINE.md": `# Project Timeline & Development Checklist
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Start Date:** May 20, 2026  
+**Target Launch:** August 20, 2026 (3-month schedule)
+
+---
+
+## PHASE 0: PRE-DEVELOPMENT (Week 1-2)
+
+### Week 1: Assets & Branding Preparation
+- [ ] Export all presets from Lightroom (Classic format, XMP, DNG)
+- [ ] Create preset inventory spreadsheet
+- [ ] Optimize 1000 photos (WebP variants, thumbnails max 400px)
+- [ ] Choose color palette and brand guidelines (heading/body fonts)
+- [ ] Write copy for Home, FAQ, About, and installation guides
+
+### Week 2: Development Setup & Design
+- [ ] Create private GitHub monorepo (\`frontend/\` and \`backend/\`)
+- [ ] Initialize Nuxt 3 project (Tailwind CSS, Pinia, VeeValidate)
+- [ ] Initialize Laravel 11 project (Sanctum, Stripe, SendGrid)
+- [ ] Setup local MySQL database & run basic migrations
+- [ ] Build UI/UX wireframes/mockups in Figma
+
+---
+
+## PHASE 1: CORE DEVELOPMENT (Week 3-5)
+
+### Week 3: Backend Foundation & Frontend Setup
+- [ ] **Backend:** Auth routes (Register/Login/Logout via Sanctum)
+- [ ] **Backend:** Presets & images schema migrations
+- [ ] **Frontend:** Structure pages (\`/gallery\`, \`/presets\`, \`/account\`)
+- [ ] **Frontend:** Build Home Page UI with responsive components
+
+### Week 4: Gallery & Preset Catalog
+- [ ] **Backend:** Email subscription controller for free presets
+- [ ] **Frontend:** Gallery page grid with before-after slider modals
+- [ ] **Frontend:** Preset catalog page with product filters
+
+### Week 5: Shopping Cart & Checkout
+- [ ] **Backend:** Order controller & Stripe payment processing
+- [ ] **Backend:** Webhook handler (\`/webhooks/stripe\`) and pre-signed R2 downloads
+- [ ] **Frontend:** Shopping cart page & checkout payment elements
+- [ ] **Frontend:** Account dashboard with purchase history
+
+---
+
+## PHASE 2: INTEGRATION & TESTING (Week 6-7)
+
+### Week 6: Full Integration & Polish
+- [ ] End-to-end testing of checkout and payment logic
+- [ ] Setup SendGrid transactional mail templates
+- [ ] Perform Lighthouse performance optimization (goal > 90)
+
+### Week 7: Testing & Bug Fixes
+- [ ] Cross-browser compatibility testing (Chrome, Safari, Firefox, iOS)
+- [ ] Deploy app to staging environments (Vite/Laravel setup)
+- [ ] Secure SSL certificates and verify database backups
+
+---
+
+## PHASE 3: LAUNCH PREPARATION (Week 8)
+
+### Week 8: Pre-Launch Setup
+- [ ] Deploy staging database to production MySQL
+- [ ] Setup production DNS records & Cloudflare CDN
+- [ ] Run soft launch test transactions
+- [ ] Announce launch on organic social media channels
+
+---
+
+**Document Version:** 1.0`,
+
+            "06_BRANDING_GUIDE.md": `# Branding Guide
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Status:** Discovery Draft
+
+---
+
+## 1. BRAND IDENTITY OPTIONS
+
+### Brand Name Ideas:
+- **Personal:** Andrian Presets, Andrian Color Lab
+- **Descriptive:** Lux Presets, Color True Lab, Aperture Lab
+- **Trendy:** Spectrum Presets, Chromatic Studio, Tonal Presets
+
+---
+
+## 2. VISUAL IDENTITY
+
+### Color Palette (Suggested Dark Theme)
+
+| Role | Color Name | Hex Code | Usage |
+|---|---|---|---|
+| **Primary** | Dark Charcoal | \`#1F2937\` | Headers, default background, elements |
+| **Accent** | Warm Amber/Gold | \`#F59E0B\` | Primary CTAs, active indicators, highlights |
+| **Secondary** | Cyan/Teal | \`#06B6D4\` | Secondary links, badges, borders |
+| **Neutral** | Light Off-Gray | \`#F3F4F6\` | Text color on dark backgrounds, cards |
+
+---
+
+### Typography
+- **Heading Font:** Poppins Bold / Outfit (Google Fonts)
+- **Body Font:** Inter Regular (Google Fonts)
+
+---
+
+## 3. PHOTOGRAPHY STYLE
+- **Before-After Consistency:** Match brightness, contrast, and skin tone variations.
+- **Optimizations:** WebP formats, thumbnails kept below 300KB to ensure fast LCP score.
+
+---
+
+## 4. TONE OF VOICE
+- **Approachable:** Professional yet friendly and results-oriented.
+- **Copy Example:** 
+  - *Incorrect:* "Download our premium color adjustment template"
+  - *Correct:* "Professional Color. One Click."
+
+---
+
+**Document Version:** 1.0`,
+
+            "07_API_SPECIFICATION.md": `# API Specification
+## Preset Lightroom E-Commerce Platform
+
+**Version:** 1.0  
+**Base URL:** \`https://api.presets.local/api\`  
+**Authentication:** JWT Bearer Token
+
+---
+
+## 1. AUTHENTICATION ENDPOINTS
+
+### POST /auth/register
+Register new user.
+- **Request Body:** \`email\`, \`name\`, \`password\`
+- **Response (201):** JWT token and user info structure.
+
+### POST /auth/login
+Login user, return JWT token.
+- **Request Body:** \`email\`, \`password\`
+- **Response (200):** Token and user info structure.
+
+---
+
+## 2. PRESET ENDPOINTS
+
+### GET /presets
+List all presets with filters.
+- **Query Params:** \`category\`, \`price_min\`, \`price_max\`, \`sort\`, \`page\`
+- **Response (200):** Paginated presets data object list.
+
+### GET /presets/:slug
+Get single preset by its slug (SEO optimized).
+
+---
+
+## 3. SHOPPING CART & ORDERS
+
+### POST /cart/items
+Add item to user cart. Blocks item if already owned.
+
+### POST /orders
+Create pending order. Returns Stripe client secret key.
+
+---
+
+## 4. WEBHOOKS & DOWNLOADS
+
+### POST /webhooks/stripe
+Webhook handler capturing \`payment_intent.succeeded\` event to finalize orders, create download records, and trigger SendGrid confirmation emails.
+
+### GET /downloads/:preset_id/url
+Generate R2 pre-signed temporary download URL (expires in 24 hours).
+
+---
+
+**Document Version:** 1.0`
+        };
+
+        // File-specific metadata for listing
+        const DOC_METADATA = [
+            { id: "00_DOCUMENTATION_INDEX.md", title: "Documentation Index", type: "Index", badgeClass: "process", desc: "Overview & Quick Start Guide", size: "11.1 KB" },
+            { id: "01_BRD.md", title: "Business Requirements", type: "BRD", badgeClass: "business", desc: "Market analysis, objectives & revenue model", size: "8.8 KB" },
+            { id: "02_PRODUCT_SPECIFICATION.md", title: "Product Specification", type: "Spec", badgeClass: "product", desc: "Detailed features & UI specifications", size: "13.8 KB" },
+            { id: "03_TECHNICAL_ARCHITECTURE.md", title: "Technical Architecture", type: "Architecture", badgeClass: "tech", desc: "Database schema, stack & file structures", size: "21.5 KB" },
+            { id: "04_USER_STORIES_USECASES.md", title: "User Stories & Use Cases", type: "Stories", badgeClass: "product", desc: "18 user journeys & acceptance criteria", size: "17.0 KB" },
+            { id: "05_PROJECT_TIMELINE.md", title: "Project Timeline", type: "Timeline", badgeClass: "process", desc: "Week-by-week development checklist", size: "17.0 KB" },
+            { id: "06_BRANDING_GUIDE.md", title: "Branding Guide", type: "Branding", badgeClass: "business", desc: "Brand identity, colors & typography rules", size: "7.8 KB" },
+            { id: "07_API_SPECIFICATION.md", title: "API Specification", type: "API Spec", badgeClass: "tech", desc: "Backend REST endpoints & webhook details", size: "16.1 KB" }
+        ];
+
+        let activeDocId = null;
+        let isRawView = false;
+
+        // Custom Marked alert rendering
+        marked.use({
+            renderer: {
+                blockquote(quote) {
+                    const alertTypes = ['NOTE', 'TIP', 'IMPORTANT', 'WARNING', 'CAUTION'];
+                    for (const type of alertTypes) {
+                        if (quote.includes(`[!${type}]`)) {
+                            // Extract actual text inside the blockquote
+                            const cleanQuote = quote.replace(`[!${type}]`, '').replace(/<br\s*\/?>/gi, '').trim();
+                            return `<div class="alert-box alert-${type.toLowerCase()}">
+                                <div class="alert-title">
+                                    <span class="alert-icon"></span>
+                                    ${type}
+                                </div>
+                                <div class="alert-content">${cleanQuote}</div>
+                            </div>`;
+                        }
+                    }
+                    return `<blockquote>${quote}</blockquote>`;
+                }
+            }
+        });
+
+        // Initialize UI Elements
+        document.addEventListener("DOMContentLoaded", () => {
+            renderSidebar(DOC_METADATA);
+            renderDashboardCards();
+            setupEventListeners();
+            loadTheme();
+        });
+
+        // Render Sidebar
+        function renderSidebar(docs) {
+            const listEl = document.getElementById("docList");
+            listEl.innerHTML = '';
+            
+            // Home/Overview link
+            const homeItem = document.createElement("li");
+            homeItem.className = "doc-item";
+            homeItem.innerHTML = `
+                <a class="doc-link ${!activeDocId ? 'active' : ''}" onclick="showOverview()">
+                    <span class="doc-icon">🏠</span>
+                    <div class="doc-details">
+                        <span class="doc-title" style="font-family: 'Outfit', sans-serif; font-weight: 600;">System Overview</span>
+                        <span class="doc-desc">Dashboard & Quick Links</span>
+                    </div>
+                </a>
+            `;
+            listEl.appendChild(homeItem);
+
+            docs.forEach(doc => {
+                const li = document.createElement("li");
+                li.className = "doc-item";
+                li.innerHTML = `
+                    <a class="doc-link ${activeDocId === doc.id ? 'active' : ''}" onclick="loadDoc('${doc.id}')">
+                        <span class="doc-icon">${getIcon(doc.badgeClass)}</span>
+                        <div class="doc-details">
+                            <span class="doc-title">${doc.title}</span>
+                            <span class="doc-desc">${doc.desc}</span>
+                        </div>
+                    </a>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        // Render Dashboard Cards
+        function renderDashboardCards() {
+            const cardsGrid = document.getElementById("dashboardCards");
+            cardsGrid.innerHTML = '';
+            DOC_METADATA.forEach(doc => {
+                const card = document.createElement("div");
+                card.className = "grid-card";
+                card.onclick = () => loadDoc(doc.id);
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="card-badge ${doc.badgeClass}">${doc.type}</span>
+                        <span style="font-size: 11px; color: var(--text-muted);">${doc.size}</span>
+                    </div>
+                    <div class="card-title">${doc.title}</div>
+                    <div class="card-desc">${doc.desc}</div>
+                `;
+                cardsGrid.appendChild(card);
+            });
+        }
+
+        function getIcon(badgeClass) {
+            switch(badgeClass) {
+                case 'business': return '📊';
+                case 'product': return '💡';
+                case 'tech': return '⚙️';
+                case 'process': return '📅';
+                default: return '📄';
+            }
+        }
+
+        // Event listeners Setup
+        function setupEventListeners() {
+            // Theme Toggle
+            document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+            
+            // Search filter
+            document.getElementById("searchInput").addEventListener("input", handleSearch);
+
+            // Print
+            document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+            // View toggle (Rendered vs Raw Markdown)
+            document.getElementById("viewToggle").addEventListener("click", toggleViewMode);
+
+            // Copy Content
+            document.getElementById("copyBtn").addEventListener("click", copyDocContent);
+
+            // Content scrolling progress bar indicator
+            document.getElementById("contentBody").addEventListener("scroll", updateProgressBar);
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            html.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updatePrismStylesheet(newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            updatePrismStylesheet(savedTheme);
+        }
+
+        function updatePrismStylesheet(theme) {
+            const cssLink = document.getElementById("prism-css");
+            if (theme === "light") {
+                cssLink.href = "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-coy.min.css";
+            } else {
+                cssLink.href = "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css";
+            }
+        }
+
+        // Load document
+        function loadDoc(docId) {
+            activeDocId = docId;
+            const docMeta = DOC_METADATA.find(d => d.id === docId);
+            if (!docMeta) return;
+
+            // Highlight Active Link
+            renderSidebar(DOC_METADATA);
+            
+            // Fetch content from embedded or URL
+            const rawContent = EMBEDDED_DOCS[docId];
+            
+            // Update Header
+            document.getElementById("headerTitle").innerText = docMeta.title;
+            document.getElementById("headerMeta").innerText = `File: docs/${docMeta.id} | Size: ${docMeta.size}`;
+            
+            // Show action buttons
+            document.getElementById("viewToggle").classList.remove("hidden");
+            document.getElementById("copyBtn").classList.remove("hidden");
+
+            // Setup Views
+            isRawView = false;
+            document.getElementById("viewToggle").querySelector("span").innerText = "View Raw";
+            document.getElementById("rawView").value = rawContent;
+            
+            // Render HTML Markdown
+            const htmlContent = marked.parse(rawContent);
+            document.getElementById("markdownView").innerHTML = htmlContent;
+
+            // Hide Overview
+            document.getElementById("dashboardView").classList.add("hidden");
+            document.getElementById("searchResultsView").classList.add("hidden");
+            document.getElementById("rawView").classList.add("hidden");
+            
+            // Show Markdown View
+            document.getElementById("markdownView").classList.remove("hidden");
+
+            // Scroll content window to top
+            document.getElementById("contentBody").scrollTop = 0;
+            updateProgressBar();
+
+            // Refresh Prism syntax highlighting
+            setTimeout(() => {
+                Prism.highlightAllUnder(document.getElementById("markdownView"));
+            }, 50);
+        }
+
+        // Show system overview dashboard
+        function showOverview() {
+            activeDocId = null;
+            renderSidebar(DOC_METADATA);
+
+            document.getElementById("headerTitle").innerText = "Documentation Overview";
+            document.getElementById("headerMeta").innerText = "Select a document to begin reading";
+
+            // Hide action buttons
+            document.getElementById("viewToggle").classList.add("hidden");
+            document.getElementById("copyBtn").classList.add("hidden");
+
+            // Show Dashboard
+            document.getElementById("dashboardView").classList.remove("hidden");
+            document.getElementById("markdownView").classList.add("hidden");
+            document.getElementById("rawView").classList.add("hidden");
+            document.getElementById("searchResultsView").classList.add("hidden");
+
+            document.getElementById("contentBody").scrollTop = 0;
+            updateProgressBar();
+        }
+
+        // Search mechanism
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                // If query is empty, show original documentation list
+                renderSidebar(DOC_METADATA);
+                if (!activeDocId) showOverview();
+                return;
+            }
+
+            // Filter document metadata lists
+            const filteredDocs = DOC_METADATA.filter(doc => 
+                doc.title.toLowerCase().includes(query) || 
+                doc.desc.toLowerCase().includes(query) ||
+                doc.type.toLowerCase().includes(query)
+            );
+
+            renderSidebar(filteredDocs);
+
+            // Global search for matching texts inside embedded files
+            const searchResults = [];
+            Object.keys(EMBEDDED_DOCS).forEach(fileId => {
+                const content = EMBEDDED_DOCS[fileId];
+                const meta = DOC_METADATA.find(d => d.id === fileId);
+                const occurrences = getIndicesOf(query, content.toLowerCase());
+                
+                occurrences.forEach(idx => {
+                    // Extract snippet around matched context
+                    const start = Math.max(0, idx - 40);
+                    const end = Math.min(content.length, idx + query.length + 50);
+                    let snippet = content.substring(start, end).replace(/\n/g, ' ');
+                    
+                    // Escape basic html in snippet
+                    snippet = snippet.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    
+                    // Highlight match in snippet
+                    const matchRegex = new RegExp(query, 'gi');
+                    snippet = snippet.replace(matchRegex, match => `<span class="search-result-match">${match}</span>`);
+
+                    searchResults.push({
+                        fileId: fileId,
+                        fileName: meta.title,
+                        snippet: `... ${snippet} ...`
+                    });
+                });
+            });
+
+            // Switch content view to search results list
+            displaySearchResults(searchResults, query);
+        }
+
+        function displaySearchResults(results, query) {
+            document.getElementById("headerTitle").innerText = "Search Results";
+            document.getElementById("headerMeta").innerText = `Found ${results.length} matches for "${query}"`;
+
+            const listEl = document.getElementById("searchResultsList");
+            listEl.innerHTML = '';
+
+            if (results.length === 0) {
+                listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px;">No results found for "${query}"</div>`;
+            } else {
+                results.forEach(res => {
+                    const item = document.createElement("div");
+                    item.className = "search-result-item";
+                    item.onclick = () => loadDoc(res.fileId);
+                    item.innerHTML = `
+                        <div class="search-result-title">${res.fileName}</div>
+                        <div class="search-result-snippet">${res.snippet}</div>
+                    `;
+                    listEl.appendChild(item);
+                });
+            }
+
+            // Show search results panel
+            document.getElementById("dashboardView").classList.add("hidden");
+            document.getElementById("markdownView").classList.add("hidden");
+            document.getElementById("rawView").classList.add("hidden");
+            document.getElementById("searchResultsView").classList.remove("hidden");
+        }
+
+        function getIndicesOf(searchStr, str) {
+            const searchStrLen = searchStr.length;
+            if (searchStrLen === 0) return [];
+            let startIndex = 0, index, indices = [];
+            while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+                indices.push(index);
+                startIndex = index + searchStrLen;
+                if (indices.length >= 30) break; // Limit matches per query for UX performance
+            }
+            return indices;
+        }
+
+        // Toggle View Mode (Raw VS Rendered)
+        function toggleViewMode() {
+            if (!activeDocId) return;
+            isRawView = !isRawView;
+            
+            const btnSpan = document.getElementById("viewToggle").querySelector("span");
+            
+            if (isRawView) {
+                btnSpan.innerText = "View Rendered";
+                document.getElementById("markdownView").classList.add("hidden");
+                document.getElementById("rawView").classList.remove("hidden");
+            } else {
+                btnSpan.innerText = "View Raw";
+                document.getElementById("rawView").classList.add("hidden");
+                document.getElementById("markdownView").classList.remove("hidden");
+                Prism.highlightAllUnder(document.getElementById("markdownView"));
+            }
+        }
+
+        // Copy documentation content to clipboard
+        function copyDocContent() {
+            if (!activeDocId) return;
+            const content = EMBEDDED_DOCS[activeDocId];
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = document.getElementById("copyBtn");
+                const span = btn.querySelector("span");
+                const originalText = span.innerText;
+                span.innerText = "Copied!";
+                btn.style.borderColor = "#10b981";
+                btn.style.color = "#10b981";
+                setTimeout(() => {
+                    span.innerText = originalText;
+                    btn.style.borderColor = "";
+                    btn.style.color = "";
+                }, 2000);
+            });
+        }
+
+        // Update top progress bar
+        function updateProgressBar() {
+            const body = document.getElementById("contentBody");
+            const winScroll = body.scrollTop;
+            const height = body.scrollHeight - body.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            document.getElementById("readingProgress").style.width = scrolled + "%";
+        }
+    </script>
+</body>
+</html>
